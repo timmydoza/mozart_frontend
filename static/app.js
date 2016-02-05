@@ -5,29 +5,41 @@ var minuet = {
 
 var allNotes = {
   treble: [],
-  trebleb: [],
   bass: []
 };
 
+var RESTS = {
+  treble: 'b/4',
+  bass: 'd/3'
+}
+
 var diceroll, midi;
+
+
 $.get('/music', function(data, status, xhr) {
   diceroll = xhr.getResponseHeader('diceroll');
   JSON.parse(xhr.getResponseHeader('notes')).forEach(function(bar) {
     minuet.treble.push(bar.treble);
     minuet.bass.push(bar.bass);
   });
+  midi = data;
   MIDI.Player.BPM = 80;
-  MIDI.Player.loadFile(data, MIDI.Player.start);
-  MIDI.Player.addListener(function(data) {
-    if (data.channel) console.log(data.note);
-  });
+  MIDI.loadPlugin({
+	  onsuccess: function() {
+      MIDI.programChange(1, 0);
+    },
+		targetFormat: 'ogg', // optionally can force to use MP3 (for instance on mobile networks)
+		instrument: 'acoustic_grand_piano'
+		});
+  MIDI.Player.addListener(highlightNotes);
   render();
 });
 
-var RESTS = {
-  treble: 'b/4',
-  bass: 'd/3'
-}
+$('#music').click(function() {
+  MIDI.Player.loadFile(midi, MIDI.Player.start);
+})
+
+
 
 function getNotes(clef, start, stop) {
   var result = [];
@@ -81,19 +93,21 @@ function render() {
 }
 
 
-var canvas = $('#music')[0];
-var renderer = new Vex.Flow.Renderer(canvas, Vex.Flow.Renderer.Backends.SVG);
+var canvas = music;
+var renderer = new Vex.Flow.Renderer(canvas, Vex.Flow.Renderer.Backends.CANVAS);
 var ctx = renderer.getContext();
 ctx.scale(0.8, 0.8);
 
 function drawGrandStave(trebleNotes, bassNotes, verticalPosition, final) {
+  saveNotes(trebleNotes, 'treble');
+  saveNotes(bassNotes, 'bass');
 
   var upperStave = new Vex.Flow.Stave(30, verticalPosition, 960);
-  upperStave.addClef("treble");//.setContext(ctx).draw();
+  upperStave.addClef("treble");
   upperStave.addTimeSignature('3/8');
 
   var lowerStave = new Vex.Flow.Stave(30, verticalPosition + 100, 960);
-  lowerStave.addClef("bass");//.setContext(ctx).draw();
+  lowerStave.addClef("bass");
   lowerStave.addTimeSignature('3/8');
 
   var brace = new Vex.Flow.StaveConnector(upperStave, lowerStave).setType(3);
@@ -121,9 +135,6 @@ function drawGrandStave(trebleNotes, bassNotes, verticalPosition, final) {
 
   var trebleBeams = Vex.Flow.Beam.applyAndGetBeams(voice1, null, [new Vex.Flow.Fraction(3, 8)]);
   var bassBeams = Vex.Flow.Beam.applyAndGetBeams(voice2, null, [new Vex.Flow.Fraction(3, 8)]);
-    allNotes.treble.push(trebleNotes);
-    allNotes.trebleb.push(trebleBeams);
-    allNotes.bass.concat(bassNotes);
 
   var formatter = new Vex.Flow.Formatter();
   formatter.format([voice2, voice1], 880);
@@ -145,13 +156,48 @@ function drawGrandStave(trebleNotes, bassNotes, verticalPosition, final) {
   bassBeams.forEach(function(beam) {
     beam.setContext(ctx).draw();
   });
-
-
 }
 
-function changeColor(element, color) {
-  Vex.forEach($(element).find('*'), function(child) {
-    child.setAttribute('fill', color);
-    child.setAttribute('stroke', color);
-  });
+function saveNotes(noteObjs, clef) {
+  for (var i = 0; i < noteObjs.length; i++) {
+    if (noteObjs[i].clef && noteObjs[i].noteType === 'n') {
+      allNotes[clef].push(noteObjs[i]);
+    }
+  }
+}
+function paintNote(note, color) {
+  note.stem.setStyle({strokeStyle: color, fillStyle: color}).draw();
+  note.note_heads.forEach(function(noteHead) {
+    noteHead.setStyle({strokeStyle: color, fillStyle: color}).draw();
+  })
+}
+
+var trebleTime = 0;
+var bassTime = 0;
+var playedTreble = [];
+var playedBass = [];
+function highlightNotes(data) {
+  console.log(data);
+  if (data.channel === 0 && data.message === 144 && data.now !== trebleTime) {
+    paintNote(allNotes.treble[playedTreble.length], 'red');
+    trebleTime = data.now;
+    if (playedTreble.length !== 0) {
+      paintNote(allNotes.treble[playedTreble.length - 1], 'black');
+    }
+    playedTreble.push(data);
+  }
+  if (data.channel === 1 && data.message === 144 && data.now !== bassTime) {
+    paintNote(allNotes.bass[playedBass.length], 'red');
+    bassTime = data.now;
+    if (playedBass.length !== 0) {
+      paintNote(allNotes.bass[playedBass.length - 1], 'black');
+    }
+    playedBass.push(data);
+  }
+  if (data.now === data.end) {
+    setTimeout(function() {
+      paintNote(allNotes.treble[playedTreble.length - 1], 'black');
+      paintNote(allNotes.bass[playedBass.length - 1], 'black');
+    }, 1000);
+  }
 }
