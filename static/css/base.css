@@ -1,0 +1,34 @@
+body {
+  background: #ddd;
+}
+
+canvas {
+  border: 1px solid black;
+  display: block;
+  margin: 0 auto;
+  background: white;
+  box-shadow: 10px 10px 5px 0px rgba(0,0,0,1);
+}
+
+header {
+  margin: 0 auto;
+  width: 100%;
+  text-align: center;
+  position: absolute;
+}
+
+header, h1, nav, ul, li {
+  display: inline-block;
+  color: white;
+  background: blue;
+}
+
+div {
+  float: left;
+  position: fixed;
+  top: 80px;
+}
+
+button {
+  display: block;
+}

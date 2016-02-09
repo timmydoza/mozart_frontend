@@ -12,7 +12,6 @@
   "license": "ISC",
   "dependencies": {
     "compression": "^1.6.1",
-    "express": "^4.13.4",
-    "mozart-dice-game": "0.0.3"
+    "express": "^4.13.4"
   }
 }

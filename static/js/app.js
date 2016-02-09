@@ -86,17 +86,17 @@ function addNotes(_note, clef) {
 }
 
 function render() {
-  drawGrandStave(getNotes('treble', 0, 5), getNotes('bass', 0, 5), 0);
-  drawGrandStave(getNotes('treble', 6, 11), getNotes('bass', 6, 11), 230);
-  drawGrandStave(getNotes('treble', 12, 17), getNotes('bass', 12, 17), 460);
-  drawGrandStave(getNotes('treble', 18, 23), getNotes('bass', 18, 23), 680, true);
+  drawGrandStave(getNotes('treble', 0, 5), getNotes('bass', 0, 5), 100);
+  drawGrandStave(getNotes('treble', 6, 11), getNotes('bass', 6, 11), 350);
+  drawGrandStave(getNotes('treble', 12, 17), getNotes('bass', 12, 17), 600);
+  drawGrandStave(getNotes('treble', 18, 23), getNotes('bass', 18, 23), 850, true);
 }
 
 
 var canvas = music;
 var renderer = new Vex.Flow.Renderer(canvas, Vex.Flow.Renderer.Backends.CANVAS);
 var ctx = renderer.getContext();
-ctx.scale(0.8, 0.8);
+ctx.scale(0.75, 0.75);
 
 function drawGrandStave(trebleNotes, bassNotes, verticalPosition, final) {
   saveNotes(trebleNotes, 'treble');

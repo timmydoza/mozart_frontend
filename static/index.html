@@ -2,13 +2,37 @@
 <html>
   <head>
     <meta charset="utf-8">
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/3.0.3/normalize.min.css">
+    <link rel="stylesheet" type="text/css" href="css/base.css">
     <title>Mozart</title>
   </head>
   <body>
-    <canvas id="music" width="1000" height="1000"></canvas>
-    <script src="jquery-2.2.0.min.js"></script>
-    <script src="vexflow-min.js"></script>
-    <script src="midi.min.js"></script>
-    <script src="app.js"></script>
+    <header>
+      <h1>
+        Mozart Dice Game
+      </h1>
+      <nav>
+        <ul>
+          <li>
+            Create
+          </li>
+          <li>
+            About
+          </li>
+      </nav>
+    </header>
+
+    <div>
+      <button>New Minuet</button>
+      <button>Play</button>
+      <button>Stop</button>
+      <button>Download</button>
+    </div>
+
+    <canvas id="music" width="800" height="1000"></canvas>
+    <script src="js/jquery-2.2.0.min.js"></script>
+    <script src="js/vexflow-min.js"></script>
+    <script src="js/midi.min.js"></script>
+    <script src="js/app.js"></script>
   </body>
 </html>

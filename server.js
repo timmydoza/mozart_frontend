@@ -1,4 +1,4 @@
-var mozart = require('mozart-dice-game');
+var mozart = require(__dirname + '/lib/mozart-dice-game');
 var notes = require(__dirname + '/lib/vex_notes');
 var compression = require('compression');
 var express = require('express');
