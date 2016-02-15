@@ -10,22 +10,23 @@ var Mozart = (function(){
   var canvas = $('#music')[0];
   var renderer = new Vex.Flow.Renderer(canvas, Vex.Flow.Renderer.Backends.CANVAS);
   var ctx = renderer.getContext();
-  ctx.scale(0.8, 0.8);
+  ctx.scale(0.75, 0.75);
 
-  var dicerolls, midi, trebleTime, bassTime;
+  var dicerolls, midi, trebleTime, bassTime, minuet, allNotes;
   var playedTreble = 0;
   var playedBass = 0;
 
-  var minuet = {
-    treble: [],
-    bass: []
-  };
-  var allNotes = {
-    treble: [],
-    bass: []
-  };
+
 
   function getNewMinuet(callback) {
+    minuet = {
+      treble: [],
+      bass: []
+    };
+    allNotes = {
+      treble: [],
+      bass: []
+    };
     $.get('/music', function(data, status, xhr) {
       dicerolls = data.dicerolls;
       data.notes.forEach(function(bar) {
@@ -33,16 +34,20 @@ var Mozart = (function(){
         minuet.bass.push(bar.bass);
       });
       midi = data.midi;
-      if (callback) callback();
+      if (typeof callback === 'function') callback();
       render();
     });
   }
 
-  function startMidi() {
+  function startMidi(callback) {
     trebleTime = 0;
     bassTime = 0;
     playedTreble = 0;
     playedBass = 0;
+    MIDI.Player.BPM = 80;
+    MIDI.Player.addListener(function(data) {
+      highlightNotes(data, callback);
+    });
     MIDI.Player.loadFile(midi, MIDI.Player.start);
   }
 
@@ -58,7 +63,6 @@ var Mozart = (function(){
   }
 
   function loadMidiInstrument(callback, format) {
-    MIDI.Player.BPM = 80;
     MIDI.loadPlugin({
       onsuccess: function() {
         MIDI.programChange(1, 0);
@@ -67,7 +71,6 @@ var Mozart = (function(){
       targetFormat: format || 'ogg', // or 'mp3' for lower quality
       instrument: 'acoustic_grand_piano'
     });
-    MIDI.Player.addListener(highlightNotes);
   }
 
   function saveNotes(noteObjs, clef) {
@@ -85,7 +88,7 @@ var Mozart = (function(){
     });
   }
 
-  function highlightNotes(data) {
+  function highlightNotes(data, callback) {
     if (data.channel === 0 && data.message === 144 && data.now !== trebleTime) {
       paintNote(allNotes.treble[playedTreble], 'red');
       trebleTime = data.now;
@@ -104,6 +107,7 @@ var Mozart = (function(){
     }
     if (data.now === data.end) {
       setTimeout(function() {
+        callback();
         paintNote(allNotes.treble[playedTreble - 1], 'black');
         paintNote(allNotes.bass[playedBass - 1], 'black');
       }, 1000);
@@ -232,21 +236,36 @@ var Mozart = (function(){
 })();
 
 $(function() {
+  $('button').mouseup(function() {
+    this.blur();
+  })
   var newMinuet = $('#newMinuet');
   var playMinuet = $('#playMinuet');
-  var downloadMinuet = $('#downloadMinuet');
+  var downloadMidi = $('#downloadMidi');
   var aboutButton = $('#aboutButton');
   var loadingWheel = $('#loading-wheel');
 
-  $('#newMinuet').click(Mozart.getNewMinuet);
+  newMinuet.click(Mozart.getNewMinuet);
 
   playMinuet.click(function(e) {
     if (MIDI.Player.playing) {
       Mozart.stopMidi();
       playMinuet.text('Play');
+      newMinuet.attr('disabled', false);
+      downloadMidi.attr('disabled', false);
+      aboutButton.attr('disabled', false);
     } else {
-      Mozart.startMidi();
+      Mozart.startMidi(function() {
+        Mozart.stopMidi();
+        playMinuet.text('Play');
+        newMinuet.attr('disabled', false);
+        downloadMidi.attr('disabled', false);
+        aboutButton.attr('disabled', false);
+      });
       playMinuet.text('Stop');
+      newMinuet.attr('disabled', true);
+      downloadMidi.attr('disabled', true);
+      aboutButton.attr('disabled', true);
     }
   });
 
@@ -257,7 +276,7 @@ $(function() {
   });
 
   Mozart.getNewMinuet(function() {
-    newMinuet.attr('diabled', false);
+    newMinuet.attr('disabled', false);
     downloadMidi.attr('disabled', false);
   });
 });

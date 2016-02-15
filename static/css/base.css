@@ -22,7 +22,7 @@ header {
 .mozart-img {
   width: 190px;
   border-radius: 100%;
-  margin: 20px auto;
+  margin: 35px auto;
 }
 
 .title {
@@ -45,8 +45,8 @@ blockquote {
 
 .loading{
   display: inline-block;
-  width: 17px;
-  height: 17px;
+  width: 15px;
+  height: 15px;
   border-radius: 100%;
   border: 2px solid #fff;
   border-top-color: rgba(0, 0, 0, 0.3);
