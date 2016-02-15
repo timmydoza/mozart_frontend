@@ -2,34 +2,36 @@
 <html>
   <head>
     <meta charset="utf-8">
-    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/3.0.3/normalize.min.css">
+    <link rel="stylesheet" type="text/css" href="css/pure-min.css">
+    <link rel="stylesheet" type="text/css" href="css/pure-offsets-min.css">
     <link rel="stylesheet" type="text/css" href="css/base.css">
-    <title>Mozart</title>
+    <link href='https://fonts.googleapis.com/css?family=Poiret+One|Roboto' rel='stylesheet' type='text/css'>    <title>Mozart</title>
   </head>
   <body>
     <header>
-      <h1>
-        Mozart Dice Game
-      </h1>
-      <nav>
-        <ul>
-          <li>
-            Create
-          </li>
-          <li>
-            About
-          </li>
-      </nav>
+      <div class="pure-g">
+        <div class="pure-u-1-4">
+          <img class="pure-img mozart-img" src="mozart.jpg" alt="Wolfgang Amadeus Mozart"></img>
+        </div>
+        <div class="pure-u-3-4 main-column">
+          <h1 class="title">Mozart Dice Game</h1>
+          <h3 class="subtitle">Musikalisches Würfelspiel, K.516f</h3>
+          <blockquote>"To compose, without the least knowledge of music, so many German waltzes or ländler as one pleases, by throwing a certain number with two dice." -Mozart</blockquote>
+        </div>
+      </div>
     </header>
-
-    <div>
-      <button>New Minuet</button>
-      <button>Play</button>
-      <button>Stop</button>
-      <button>Download</button>
+    <div class="pure-g">
+      <div class="pure-u-1-4 control-buttons">
+        <button id="newMinuet" class="pure-button pure-button-primary" disabled>New Minuet</button>
+        <button id="playMinuet" class="pure-button pure-button-primary" disabled>Loading...<div id="loading-wheel" class="loading"></div></button>
+        <button id="downloadMinuet" class="pure-button pure-button-primary" disabled>Download MIDI</button>
+        <button id="aboutButton" class="pure-button pure-button-primary">About</button>
+        <button class="pure-button pure-button-primary" disabled>Loading<div class="loading"></div></button>
+      </div>
+      <div class="pure-u-3-4 main-column">
+        <canvas id="music" width="850" height="1100"></canvas>
+      </div>
     </div>
-
-    <canvas id="music" width="800" height="1000"></canvas>
     <script src="js/jquery-2.2.0.min.js"></script>
     <script src="js/vexflow-min.js"></script>
     <script src="js/midi.min.js"></script>

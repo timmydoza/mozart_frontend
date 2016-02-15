@@ -7,21 +7,17 @@ var app = express();
 app.use(compression());
 app.use('/', express.static('static'));
 app.get('/music', function(req, res) {
-  var minuet = mozart.getMinuet(40);
+  var minuet = mozart.getMinuet(4);
   var vexNotes = [];
-  var midi = "";
   minuet.measures.forEach(function(measure) {
     vexNotes.push(notes[measure]);
   });
-
-  res.writeHead(200, {
-    'Content-Type': 'application/x-midi',
-    'notes': JSON.stringify(vexNotes),
-    'diceroll': JSON.stringify(minuet.dice)
-  });
   var midi = new Buffer(minuet.bytes, 'binary').toString('base64');
-  debugger;
-  res.end('data:audio/midi;base64,' + midi);
+  res.json({
+    notes: vexNotes,
+    dicerolls: minuet.dice,
+    midi: 'base64,' + midi
+  });
 });
 
 app.listen(3000, function() {
