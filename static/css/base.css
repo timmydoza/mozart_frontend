@@ -31,6 +31,7 @@ header {
 
 .table-img {
   float: right;
+  width: 350px;
 }
 
 .title {
@@ -48,7 +49,7 @@ blockquote {
   font-family: 'Poiret One', sans-serif;
   font-size: 1.5em;
   font-style: italic;
-  width: 700px;
+  max-width: 700px;
 }
 
 .aboutsection {
@@ -58,12 +59,13 @@ blockquote {
 }
 
 .display {
-  max-height: 500px;
+  max-height: 700px;
 }
 
 .about {
-  margin: 0 auto;
+  /*margin: 0 auto;*/
   text-align: justify;
+  max-width: 800px;
 }
 
 .loading{
@@ -87,4 +89,8 @@ blockquote {
 @-webkit-keyframes loading{
   0%{-webkit-transform:rotate(0deg)}
   100%{-webkit-transform:rotate(360deg)}
+}
+
+@media screen and (min-size: 64em) {
+
 }

@@ -2,7 +2,9 @@
 <html>
   <head>
     <meta charset="utf-8">
+    <!-- <meta name="viewport" content="width=device-width, initial-scale=1"> -->
     <link rel="stylesheet" type="text/css" href="css/pure-min.css">
+    <link rel="stylesheet" href="http://yui.yahooapis.com/pure/0.6.0/grids-responsive-min.css">
     <link rel="stylesheet" type="text/css" href="css/pure-offsets-min.css">
     <link rel="stylesheet" type="text/css" href="css/base.css">
     <link href='https://fonts.googleapis.com/css?family=Poiret+One|Roboto' rel='stylesheet' type='text/css'>    <title>Mozart</title>
@@ -10,10 +12,10 @@
   <body>
     <header>
       <div class="pure-g">
-        <div class="pure-u-1-4">
+        <div class="pure-u-1-5 pure-u-xl-1-3">
           <img class="pure-img mozart-img" src="mozart.jpg" alt="Wolfgang Amadeus Mozart"></img>
         </div>
-        <div class="pure-u-3-4">
+        <div class="pure-u-4-5 pure-u-xl-2-3">
           <h1 class="title">Mozart Dice Game</h1>
           <h3 class="subtitle">Musikalisches Würfelspiel, K.516f</h3>
           <blockquote>"To compose, without the least knowledge of music, so many German waltzes or ländler as one pleases, by throwing a certain number with two dice." -Mozart</blockquote>
@@ -21,24 +23,29 @@
       </div>
     </header>
     <div class="aboutsection pure-g">
-      <div class="pure-u-1-4">
+      <div class="pure-u-1-5 pure-u-xl-1-3">
         <button id="hideButton" class="pure-button pure-button-primary">Hide</button>
       </div>
-      <div class="about pure-u-3-4">
+      <div class="about pure-u-4-5 pure-u-xl-2-3">
         <img class="pure-img table-img" src="table.jpg" alt="Table of numbers from Mozart's instructions"></img>
-        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque sodales dui sem. Aliquam viverra neque quis fringilla tincidunt. Nunc quis libero convallis velit facilisis vulputate in in velit. Vivamus sed suscipit eros, sit amet aliquam risus. Sed facilisis in dui id convallis. Etiam convallis nibh mauris, vel pulvinar purus sollicitudin vel. Vestibulum in ante eget augue sagittis auctor sed a quam. Donec nulla nulla, efficitur sed dolor at, tincidunt interdum sem. Nullam at ultrices arcu, sed laoreet massa. Phasellus varius ante ac nunc faucibus, eu ultrices urna eleifend. Sed eget velit nec arcu lobortis dictum dictum ac justo. Sed dignissim eros ac orci dictum facilisis. Aliquam accumsan turpis nec ligula gravida, vel ultricies massa convallis. Nulla viverra erat enim, bibendum accumsan tellus maximus a. Vestibulum ullamcorper diam a tortor tempus tristique.</p>
+        <p>&emsp; In 1787, composer Wolfgang Amadeus Mozart published a musical composition entitled "Musikalisches Würfelspiel", or "Musical Dice Game". This composition allows one, as Mozart puts it, "to compose, without the least knowledge of music, so many German waltzes or ländler as one pleases, by throwing a certain number with two dice."</p>
+        <p>&emsp; The composition consists of 176 pre-composed measures of music (example below) and two numerical tables (example right) which show the user which numbered measures to select based on the roll of two dice.</p>
+        <p>&emsp; To play, the user rolls a pair of dice sixteen times, once for each measure of the waltz or minuet to be generated.  The user then uses the numerical tables to look up the next numbered measure to be used.</p>
         <img class="pure-img staff-img" src="staff.jpg" alt="One staff from Mozart's instructions"></img>
+        <p>&emsp; Visit <a href="http://imslp.org/wiki/Musikalisches_W%C3%BCrfelspiel,_K.516f_(Mozart,_Wolfgang_Amadeus)">IMSLP</a> to see a copy of the published dice game.
+          This website uses <a href="http://www.vexflow.com/">VexFlow</a>, <a href="https://github.com/mudcube/MIDI.js/">MIDI.js</a>, <a href="https://github.com/dingram/jsmidgen">jsmidgen</a>, and <a href="https://jquery.com/">jQuery</a>.
+          See the source code for this site on <a href="https://github.com/timmydoza/mozart_frontend">GitHub</a> or send me an <a href="mailto:timmydoza@gmail.com">email</a> and let me know what you think. 
       </div>
     </div>
     <div class="pure-g">
-      <div class="pure-u-1-4 control-buttons">
+      <div class="pure-u-1-5 pure-u-xl-1-3 control-buttons">
         <button id="newMinuet" class="pure-button pure-button-primary" disabled>New Minuet</button>
         <button id="playMinuet" class="pure-button pure-button-primary" disabled>Loading...<div id="loading-wheel" class="loading"></div></button>
         <button id="downloadMidi" class="pure-button pure-button-primary" disabled>Download MIDI</button>
         <button id="aboutButton" class="pure-button pure-button-primary">About</button>
       </div>
-      <div class="pure-u-3-4">
-        <canvas id="music" width="850" height="1100"></canvas>
+      <div class="pure-u-4-5 pure-u-xl-2-3">
+        <canvas id="music" width="780" height="950"></canvas>
       </div>
     </div>
     <script src="js/jquery-2.2.0.min.js"></script>

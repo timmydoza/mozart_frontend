@@ -160,21 +160,21 @@ var Mozart = (function(){
 
   function render() {
     ctx.clearRect(0, 0, 1100, 1300);
-    drawGrandStave(getNotes('treble', 0, 5), getNotes('bass', 0, 5), 100);
-    drawGrandStave(getNotes('treble', 6, 11), getNotes('bass', 6, 11), 350);
-    drawGrandStave(getNotes('treble', 12, 17), getNotes('bass', 12, 17), 600);
-    drawGrandStave(getNotes('treble', 18, 23), getNotes('bass', 18, 23), 850, true);
+    drawGrandStave(getNotes('treble', 0, 5), getNotes('bass', 0, 5), 75);
+    drawGrandStave(getNotes('treble', 6, 11), getNotes('bass', 6, 11), 365);
+    drawGrandStave(getNotes('treble', 12, 17), getNotes('bass', 12, 17), 655);
+    drawGrandStave(getNotes('treble', 18, 23), getNotes('bass', 18, 23), 945, true);
   }
 
   function drawGrandStave(trebleNotes, bassNotes, verticalPosition, final) {
     saveNotes(trebleNotes, 'treble');
     saveNotes(bassNotes, 'bass');
 
-    var upperStave = new Vex.Flow.Stave(30, verticalPosition, 960);
+    var upperStave = new Vex.Flow.Stave(45, verticalPosition, 960);
     upperStave.addClef("treble");
     upperStave.addTimeSignature('3/8');
 
-    var lowerStave = new Vex.Flow.Stave(30, verticalPosition + 100, 960);
+    var lowerStave = new Vex.Flow.Stave(45, verticalPosition + 100, 960);
     lowerStave.addClef("bass");
     lowerStave.addTimeSignature('3/8');
 
@@ -238,7 +238,7 @@ var Mozart = (function(){
 $(function() {
   $('button').mouseup(function() {
     this.blur();
-  })
+  });
   var newMinuet = $('#newMinuet');
   var playMinuet = $('#playMinuet');
   var downloadMidi = $('#downloadMidi');
