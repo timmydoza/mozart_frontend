@@ -13,7 +13,7 @@ header {
   margin-bottom: 15px;
 }
 
-.control-buttons button {
+.control-buttons button, #hideButton {
   display: block;
   margin: 5px auto;
   min-width: 150px;
@@ -23,6 +23,14 @@ header {
   width: 190px;
   border-radius: 100%;
   margin: 35px auto;
+}
+
+.staff-img {
+  margin: 0 auto;
+}
+
+.table-img {
+  float: right;
 }
 
 .title {
@@ -41,6 +49,21 @@ blockquote {
   font-size: 1.5em;
   font-style: italic;
   width: 700px;
+}
+
+.aboutsection {
+  overflow: hidden;
+  max-height: 0px;
+  transition: all ease-out 0.8s;
+}
+
+.display {
+  max-height: 500px;
+}
+
+.about {
+  margin: 0 auto;
+  text-align: justify;
 }
 
 .loading{

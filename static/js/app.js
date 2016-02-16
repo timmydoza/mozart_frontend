@@ -243,6 +243,7 @@ $(function() {
   var playMinuet = $('#playMinuet');
   var downloadMidi = $('#downloadMidi');
   var aboutButton = $('#aboutButton');
+  var hideButton = $('#hideButton');
   var loadingWheel = $('#loading-wheel');
 
   newMinuet.click(Mozart.getNewMinuet);
@@ -267,6 +268,14 @@ $(function() {
       downloadMidi.attr('disabled', true);
       aboutButton.attr('disabled', true);
     }
+  });
+
+  aboutButton.click(function() {
+    $('.aboutsection').addClass('display');
+  });
+
+  hideButton.click(function() {
+    $('.aboutsection').removeClass('display');
   });
 
   Mozart.loadMidiInstrument(function() {
