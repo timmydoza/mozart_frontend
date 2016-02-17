@@ -7,7 +7,7 @@ var app = express();
 app.use(compression());
 app.use('/', express.static('static'));
 app.get('/music', function(req, res) {
-  var minuet = mozart.getMinuet(4);
+  var minuet = mozart.getMinuet(80);
   var vexNotes = [];
   minuet.measures.forEach(function(measure) {
     vexNotes.push(notes[measure]);
@@ -16,7 +16,7 @@ app.get('/music', function(req, res) {
   res.json({
     notes: vexNotes,
     dicerolls: minuet.dice,
-    midi: 'base64,' + midi
+    midi: 'data:audio/midi;base64,' + midi
   });
 });
 

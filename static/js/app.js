@@ -1,5 +1,5 @@
 var Mozart = (function(){
-  var publicVars = {};
+  MIDI.Player.BPM = 80;
   //Rest positions for treble and bass clef
   var RESTS = {
     treble: 'b/4',
@@ -15,8 +15,6 @@ var Mozart = (function(){
   var dicerolls, midi, trebleTime, bassTime, minuet, allNotes;
   var playedTreble = 0;
   var playedBass = 0;
-
-
 
   function getNewMinuet(callback) {
     minuet = {
@@ -44,7 +42,6 @@ var Mozart = (function(){
     bassTime = 0;
     playedTreble = 0;
     playedBass = 0;
-    MIDI.Player.BPM = 80;
     MIDI.Player.addListener(function(data) {
       highlightNotes(data, callback);
     });
@@ -59,7 +56,7 @@ var Mozart = (function(){
   }
 
   function downloadMidi() {
-
+    window.location = midi;
   }
 
   function loadMidiInstrument(callback, format) {
@@ -277,6 +274,8 @@ $(function() {
   hideButton.click(function() {
     $('.aboutsection').removeClass('display');
   });
+
+  downloadMidi.click(Mozart.downloadMidi);
 
   Mozart.loadMidiInstrument(function() {
     playMinuet.text('Play');
