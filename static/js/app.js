@@ -1,5 +1,7 @@
 var Mozart = (function(){
+  //beats per minute
   MIDI.Player.BPM = 80;
+
   //Rest positions for treble and bass clef
   var RESTS = {
     treble: 'b/4',
@@ -262,7 +264,10 @@ var Mozart = (function(){
     getNewMinuet: getNewMinuet,
     startMidi: startMidi,
     stopMidi: stopMidi,
-    downloadMidi: downloadMidi
+    downloadMidi: downloadMidi,
+    get dicerolls() {
+      return dicerolls;
+    }
   };
 })();
 
