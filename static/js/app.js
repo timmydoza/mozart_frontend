@@ -16,6 +16,7 @@ var Mozart = (function(){
   var playedTreble = 0;
   var playedBass = 0;
 
+  //gets new midi file and VexFlow notes from server
   function getNewMinuet(callback) {
     minuet = {
       treble: [],
@@ -38,11 +39,13 @@ var Mozart = (function(){
   }
 
   function startMidi(callback) {
+    //resets values used by highlightNotes function
     trebleTime = 0;
     bassTime = 0;
     playedTreble = 0;
     playedBass = 0;
     MIDI.Player.addListener(function(data) {
+      //this function is called for every midi event in the midi file
       highlightNotes(data, callback);
     });
     MIDI.Player.loadFile(midi, MIDI.Player.start);
@@ -50,6 +53,7 @@ var Mozart = (function(){
 
   function stopMidi() {
     MIDI.Player.stop();
+    //change the current highlighted notes to black
     paintNote(allNotes.treble[playedTreble - 1], 'black');
     paintNote(allNotes.bass[playedBass - 1], 'black');
     //alternatively, render()
@@ -62,6 +66,7 @@ var Mozart = (function(){
   function loadMidiInstrument(callback, format) {
     MIDI.loadPlugin({
       onsuccess: function() {
+        //this changes the instrument for channel 1 to piano
         MIDI.programChange(1, 0);
         callback();
       },
@@ -70,6 +75,9 @@ var Mozart = (function(){
     });
   }
 
+  //the noteObjs passed in to this function contain barline objects, which should
+  //not be highlighted by the highlightNotes function.  This function strips only the
+  //note objects and saves them to the allNotes object.
   function saveNotes(noteObjs, clef) {
     for (var i = 0; i < noteObjs.length; i++) {
       if (noteObjs[i].clef && noteObjs[i].noteType === 'n') {
@@ -78,6 +86,7 @@ var Mozart = (function(){
     }
   }
 
+  //Paints the note head and note stem of a given note object
   function paintNote(note, color) {
     note.stem.setStyle({strokeStyle: color, fillStyle: color}).draw();
     note.note_heads.forEach(function(noteHead) {
@@ -86,9 +95,15 @@ var Mozart = (function(){
   }
 
   function highlightNotes(data, callback) {
+    //for the purpose of highlighting the note(s) that are being played, chords
+    //should be treated as a single note.  We don't want to paint all the notes in
+    //a chord in sequence, but we want to paint them all at once.  If data.now equals
+    //trebleTime, then we know that the noteOn event is part of a chord, so it is
+    //ignored
     if (data.channel === 0 && data.message === 144 && data.now !== trebleTime) {
       paintNote(allNotes.treble[playedTreble], 'red');
       trebleTime = data.now;
+      //paints the previous note(s) black for every note except for the very first
       if (playedTreble !== 0) {
         paintNote(allNotes.treble[playedTreble - 1], 'black');
       }
@@ -97,14 +112,17 @@ var Mozart = (function(){
     if (data.channel === 1 && data.message === 144 && data.now !== bassTime) {
       paintNote(allNotes.bass[playedBass], 'red');
       bassTime = data.now;
+      //paints the previous note(s) black for every note except for the very first
       if (playedBass !== 0) {
         paintNote(allNotes.bass[playedBass - 1], 'black');
       }
       playedBass++;
     }
+    //if the song is over
     if (data.now === data.end) {
       setTimeout(function() {
         callback();
+        //paint the last two notes black after one second
         paintNote(allNotes.treble[playedTreble - 1], 'black');
         paintNote(allNotes.bass[playedBass - 1], 'black');
       }, 1000);
@@ -120,6 +138,7 @@ var Mozart = (function(){
         //if note is a single note
         result.push(addNotes(minuet[clef][i][j], clef));
       }
+      //if it is not the last measure, add a barline
       if (i !== stop) {
         result.push(new Vex.Flow.BarNote(1));
       }
@@ -156,7 +175,10 @@ var Mozart = (function(){
   }
 
   function render() {
+    //clear the canvas
     ctx.clearRect(0, 0, 1100, 1300);
+    //generate VexFlow notes from AJAX call and render the stave for each of the
+    //four grand staves
     drawGrandStave(getNotes('treble', 0, 5), getNotes('bass', 0, 5), 75);
     drawGrandStave(getNotes('treble', 6, 11), getNotes('bass', 6, 11), 365);
     drawGrandStave(getNotes('treble', 12, 17), getNotes('bass', 12, 17), 655);
@@ -164,50 +186,61 @@ var Mozart = (function(){
   }
 
   function drawGrandStave(trebleNotes, bassNotes, verticalPosition, final) {
+    //save all note objects (removing bar line objects) to allNotes
     saveNotes(trebleNotes, 'treble');
     saveNotes(bassNotes, 'bass');
 
+    //create stave and give it a treble clef and time signature of 3/8
     var upperStave = new Vex.Flow.Stave(45, verticalPosition, 960);
     upperStave.addClef("treble");
     upperStave.addTimeSignature('3/8');
 
+    //create stave and give it a bass clef and time signature of 3/8
     var lowerStave = new Vex.Flow.Stave(45, verticalPosition + 100, 960);
     lowerStave.addClef("bass");
     lowerStave.addTimeSignature('3/8');
 
+    //create lefthand brace between treble and bass staves
     var brace = new Vex.Flow.StaveConnector(upperStave, lowerStave).setType(3);
     var lineLeft = new Vex.Flow.StaveConnector(upperStave, lowerStave).setType(1);
     if (final) {
+      //create double bar line at the right end of the stave if it is the last stave
       var lineRight = new Vex.Flow.StaveConnector(upperStave, lowerStave).setType(6);
     } else {
+      //otherwise, create single bar line at right end of stave
       var lineRight = new Vex.Flow.StaveConnector(upperStave, lowerStave).setType(0);
     }
 
+    //create VexFlow voice for treble stave with six measures worth of 'ticks'
     var voice1 = new Vex.Flow.Voice({
       num_beats: 18,
       beat_value: 8,
       resolution: Vex.Flow.RESOLUTION
     });
 
+    //create VexFlow voice for bass stave with six measures worth of 'ticks'
     var voice2 = new Vex.Flow.Voice({
       num_beats: 18,
       beat_value: 8,
       resolution: Vex.Flow.RESOLUTION
     });
 
+    //add VexFlow note objects to the voices
     voice1.addTickables(trebleNotes);
     voice2.addTickables(bassNotes);
 
+    //automatically apply the note beams for each voice
     var trebleBeams = Vex.Flow.Beam.applyAndGetBeams(voice1, null, [new Vex.Flow.Fraction(3, 8)]);
     var bassBeams = Vex.Flow.Beam.applyAndGetBeams(voice2, null, [new Vex.Flow.Fraction(3, 8)]);
 
+    //vertically align the notes in each stave
     var formatter = new Vex.Flow.Formatter();
     formatter.format([voice2, voice1], 880);
-
     var max_x = Math.max(upperStave.getNoteStartX(), lowerStave.getNoteStartX());
     upperStave.setNoteStartX(max_x);
     lowerStave.setNoteStartX(max_x);
 
+    //draw everything
     upperStave.setContext(ctx).draw();
     lowerStave.setContext(ctx).draw();
     brace.setContext(ctx).draw();
@@ -223,6 +256,7 @@ var Mozart = (function(){
     });
   }
 
+  //exports
   return {
     loadMidiInstrument: loadMidiInstrument,
     getNewMinuet: getNewMinuet,
@@ -232,6 +266,7 @@ var Mozart = (function(){
   };
 })();
 
+//event listeners for buttons
 $(function() {
   $('button').mouseup(function() {
     this.blur();
