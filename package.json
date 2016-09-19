@@ -1,6 +1,6 @@
 {
   "name": "mozart_frontend",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "",
   "main": "server.js",
   "scripts": {
@@ -12,6 +12,7 @@
   "license": "ISC",
   "dependencies": {
     "compression": "^1.6.1",
-    "express": "^4.13.4"
+    "mozart-dice-game": "0.0.9",
+    "router": "^1.1.4"
   }
 }
