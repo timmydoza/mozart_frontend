@@ -1,7 +1,7 @@
 var mozart = require('mozart-dice-game');
 var notes = require(__dirname + '/lib/vex_notes');
 var compression = require('compression');
-var app = require('router');
+var app = require('router')();
 
 app.use(compression());
 app.use('/', express.static(__dirname + '/static'));
