@@ -28,7 +28,7 @@ var Mozart = (function(){
       treble: [],
       bass: []
     };
-    $.get('/music', function(data, status, xhr) {
+    $.get('music', function(data, status, xhr) {
       dicerolls = data.dicerolls;
       data.notes.forEach(function(bar) {
         minuet.treble.push(bar.treble);
