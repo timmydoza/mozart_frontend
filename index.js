@@ -2,9 +2,10 @@ var mozart = require('mozart-dice-game');
 var notes = require(__dirname + '/lib/vex_notes');
 var compression = require('compression');
 var app = require('router')();
+var static = require('serve-static');
 
 app.use(compression());
-app.use('/', express.static(__dirname + '/static'));
+app.use('/', static(__dirname + '/static'));
 app.get('/music', function(req, res) {
   var minuet = mozart.getMinuet(80);
   var vexNotes = [];
